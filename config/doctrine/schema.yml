@@ -1,0 +1,19 @@
+
+Site:
+  tableName: site
+  columns:
+    url: string(255)
+    title: string(255)
+    ip: string(255)
+    host : string(255)
+    http_code: string(255)
+    effective_url: string(255)
+    last_check: date
+    
+  actAs:
+    Timestampable:
+    Sluggable: { fields: [url], uniqueBy: [id], canUpdate: false }
+
+  options:
+    collate: utf8_unicode_ci
+    charset: utf8
