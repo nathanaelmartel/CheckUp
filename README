@@ -16,11 +16,14 @@ git clone git://github.com/simplementNat/CheckUp.git
 cp config/databases.yml.sample config/databases.yml
 vi config/databases.yml
 
+cp config/app.yml.sample config/app.yml
+vi config/app.yml
+
 mkdir cache
 mkdir log
 ./symfony project:permissions
 ./symfony doctrine:build --all
 
 crontab -e
-*       *       *       *       *       /path/symfony checkup >/dev/null 2>&1
+*       *       *       *       *       /path/symfony checkup --application="frontend"  >/dev/null 2>&1
 
