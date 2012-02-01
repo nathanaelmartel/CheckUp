@@ -1,0 +1,11 @@
+# You can find more information about this file on the symfony website:
+# http://www.symfony-project.org/reference/1_4/en/11-App
+
+# default values
+all:
+  alert:
+    email_subject: '[CheckUp]'
+    email_from: exemple@exemple.com
+    email_to: exemple@exemple.com
+    email_format: 'We detected an error for %s  <br /><br />%s <br />'
+    email_format_change: '<strong>%s</strong> change: « %s » -> «<strong> %s </strong>» <br />'

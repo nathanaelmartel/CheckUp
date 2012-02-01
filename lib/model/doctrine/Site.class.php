@@ -14,27 +14,30 @@ class Site extends BaseSite
 {
   private $curl_getinfo = '';
   private $page = '';
+  private $message = '';
+  private $format = '';
   
   public function retrieveHttpCode()
   {
     $curl_getinfo = $this->curlCall();
     
-    $httpCode = $curl_getinfo['http_code'];
+    $http_code = $curl_getinfo['http_code'];
     
-    if ($httpCode != $this->http_code)
+    if ($http_code != $this->http_code)
     {
-    	// TODO: alert mail
-    	echo "\n".'alert: http code change'."\n";
+    	$this->message .= sprintf($this->format, 'http code', $this->http_code, $http_code);
       
-      $this->http_code = $httpCode;
+      $this->http_code = $http_code;
       $this->save();
     }
     
-    return $httpCode;
+    return $http_code;
   }
   
-  public function retrieveInfo()
+  public function retrieveInfo($format)
   {
+  	$this->format = $format;
+  	
     if($this->retrieveHttpCode() == 200)
     {
      	//$this->retrieveScreenshot();
@@ -60,10 +63,12 @@ class Site extends BaseSite
 	      $this->retrieveIP();
 	      $this->retrieveHost();
       }
-    }
+    } 
     
 	  $this->last_check = new Doctrine_Expression('NOW()');
     $this->save();
+    
+    return $this->message;
   }
   
   private function curlCall($follow_redirect = false) 
@@ -96,8 +101,7 @@ class Site extends BaseSite
     
     if ($ip != $this->ip)
     {
-    	// TODO: alert mail
-    	echo "\n".'alert: IP change'."\n";
+    	$this->message .= sprintf($this->format, 'ip', $this->ip, $ip);
       
       $this->ip = $ip;
       $this->save();
@@ -112,8 +116,7 @@ class Site extends BaseSite
     
     if ($host != $this->host)
     {
-    	// TODO: alert mail
-    	echo "\n".'alert: host change'."\n";
+    	$this->message .= sprintf($this->format, 'host', $this->host, $host);
       
       $this->host = $host;
       $this->save();
@@ -136,8 +139,7 @@ class Site extends BaseSite
     
     if ($title != $this->title)
     {
-    	// TODO: alert mail
-    	echo "\n".'alert: title change'."\n";
+    	$this->message .= sprintf($this->format, 'title', $this->title, $title);
       
       $this->title = $title;
       $this->save();
@@ -194,11 +196,6 @@ class Site extends BaseSite
       
     if ($downloaded)
     {
-      $log = new Log();
-      $log->label = 'favicon';
-      $log->message = 'download favicon for "'.$this->name.'" ('.$this->id.')';
-      $log->save();
-        
       $this->last_favicon = new Doctrine_Expression('NOW()');
       $this->save();
     } 
@@ -237,11 +234,6 @@ class Site extends BaseSite
 		    {
 			    $img = new sfImage($temp, 'image/png');
 			    $img->saveAs($screenshot_dir.date('Y-m').'.png');
-			    
-	        $log = new Log();
-	        $log->label = 'screenshot';
-	        $log->message = 'screenshot for "'.$this->name.'" ('.$this->id.')';
-	        $log->save();
         
 	        $this->last_screenshot = new Doctrine_Expression('NOW()');
 	        $this->save();

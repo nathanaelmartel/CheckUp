@@ -39,7 +39,19 @@ EOF;
     foreach ($sites as $site)
     {
       echo $site->getUrl()."\t\t\t";
-      $site->retrieveInfo();
+      $message_body = $site->retrieveInfo(sfConfig::get('app_alert_email_format_change'));
+      
+      if ($message_body != '') {
+	      $message = $this->getMailer()->compose(
+	      	sfConfig::get('app_alert_email_from'), 
+	      	sfConfig::get('app_alert_email_to'), 
+	      	sfConfig::get('app_alert_email_subject').' '.$site->getUrl(), 
+	      	sprintf(sfConfig::get('app_alert_email_format'), $site->getUrl(), $message_body)
+	      );
+	      $message->setContentType('text/html');
+      	$this->getMailer()->send($message);
+      }
+      
       echo "\n";
     }
     
