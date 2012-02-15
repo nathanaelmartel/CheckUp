@@ -25,7 +25,10 @@ class Site extends BaseSite
     
     if ($http_code != $this->http_code)
     {
-    	$this->message .= sprintf($this->format, 'http code', $this->http_code, $http_code);
+    	if ($this->http_code != '')
+    	{
+    		$this->message .= sprintf($this->format, 'http code', $this->http_code, $http_code);
+    	}
       
       $this->http_code = $http_code;
       $this->save();
@@ -101,7 +104,10 @@ class Site extends BaseSite
     
     if ($ip != $this->ip)
     {
-    	$this->message .= sprintf($this->format, 'ip', $this->ip, $ip);
+    	if ($this->ip != '')
+    	{
+    		$this->message .= sprintf($this->format, 'ip', $this->ip, $ip);
+    	}
       
       $this->ip = $ip;
       $this->save();
@@ -116,7 +122,11 @@ class Site extends BaseSite
     
     if ($host != $this->host)
     {
-    	$this->message .= sprintf($this->format, 'host', $this->host, $host);
+    	if ($this->host != '')
+    	{
+    		$this->message .= sprintf($this->format, 'host', $this->host, $host);
+    	}
+    	
       
       $this->host = $host;
       $this->save();
@@ -139,8 +149,11 @@ class Site extends BaseSite
     
     if ($title != $this->title)
     {
-    	$this->message .= sprintf($this->format, 'title', $this->title, $title);
-      
+    	if ($this->title != '')
+    	{
+    		$this->message .= sprintf($this->format, 'title', $this->title, $title);
+    	}
+    	
       $this->title = $title;
       $this->save();
     }
