@@ -16,6 +16,8 @@ class Site extends BaseSite
   private $page = '';
   private $message = '';
   private $format = '';
+  private $redirection = false;
+  private $failed = 0;
   
   public function retrieveHttpCode()
   {
@@ -23,15 +25,27 @@ class Site extends BaseSite
     
     $http_code = $curl_getinfo['http_code'];
     
-    if ($http_code != $this->http_code)
+    if (($http_code == 301) || ($http_code == 302)) {
+    	$this->redirection = $http_code;
+    	$curl_getinfo = $this->curlCall(true);
+    	$http_code = $curl_getinfo['http_code'];
+    }
+    
+    if (($http_code != $this->http_code) || ($http_code != 200))
     {
-    	if ($this->http_code != '')
-    	{
-    		$this->message .= sprintf($this->format, 'http code', $this->http_code, $http_code);
+    	$this->failed++;
+    	$this->curl_getinfo = '';
+    	
+    	if ($this->failed > 2) {
+	    	if ($this->http_code != '')
+	    	{
+	    		$this->message .= sprintf($this->format, 'http code', $this->http_code, $http_code);
+	    	}
+	      $this->http_code = $http_code;
+	      $this->save();
+    	} else {
+    		$this->retrieveHttpCode();
     	}
-      
-      $this->http_code = $http_code;
-      $this->save();
     }
     
     return $http_code;
@@ -41,13 +55,24 @@ class Site extends BaseSite
   {
   	$this->format = $format;
   	
-    if($this->retrieveHttpCode() == 200)
-    {
-     	//$this->retrieveScreenshot();
-      //$this->retrieveFavicon();
-      $this->retrieveTitle();
-      $this->retrieveIP();
-      $this->retrieveHost();
+    $this->retrieveHttpCode();
+    
+	  $this->last_check = new Doctrine_Expression('NOW()');
+    $this->save();
+    
+    return $this->message;
+  }
+  
+  public function retrieveAllInfo($format)
+  {
+  	$this->format = $format;
+  	
+    $this->retrieveHttpCode();
+    //$this->retrieveScreenshot();
+    //$this->retrieveFavicon();
+    $this->retrieveTitle();
+    $this->retrieveIP();
+    $this->retrieveHost();
       
       /* todo
        * - retrieve apple favicon
@@ -57,16 +82,6 @@ class Site extends BaseSite
        * - save meta description
        * - save meta keyword
        */  
-    } elseif (($this->retrieveHttpCode() == 301) || ($this->retrieveHttpCode() == 302)) {
-    	
-      if ($this->curlCall(true))
-      {
-	      //$this->retrieveScreenshot();
-	      //$this->retrieveFavicon();
-	      $this->retrieveIP();
-	      $this->retrieveHost();
-      }
-    } 
     
 	  $this->last_check = new Doctrine_Expression('NOW()');
     $this->save();

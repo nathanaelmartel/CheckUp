@@ -1,0 +1,8 @@
+
+
+# default rules
+homepage:
+  url:   /api/sites/:domaine/httpcode
+  param: { module: sites, action: httpcode }
+  options: 
+    segment_separators: [/]

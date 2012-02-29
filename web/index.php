@@ -1,7 +1,12 @@
 <?php
 
 
-require_once(dirname(__FILE__).'/../config/ProjectConfiguration.class.php');
+$application = 'frontend';
 
-$configuration = ProjectConfiguration::getApplicationConfiguration('frontend', 'prod', false);
+if (substr_count($_SERVER['REQUEST_URI'], '/api/')) {
+	$application = 'api';
+}
+
+require_once(dirname(__FILE__).'/../config/ProjectConfiguration.class.php');
+$configuration = ProjectConfiguration::getApplicationConfiguration($application, 'dev', true);
 sfContext::createInstance($configuration)->dispatch();
