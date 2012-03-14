@@ -21,14 +21,14 @@ class Site extends BaseSite
   
   public function retrieveHttpCode()
   {
-    $curl_getinfo = $this->curlCall();
+    $this->curl_getinfo = $this->curlCall();
     
-    $http_code = $curl_getinfo['http_code'];
+    $http_code = $this->curl_getinfo['http_code'];
     
     if (($http_code == 301) || ($http_code == 302)) {
     	$this->redirection = $http_code;
-    	$curl_getinfo = $this->curlCall(true);
-    	$http_code = $curl_getinfo['http_code'];
+    	$this->curl_getinfo = $this->curlCall(true);
+    	$http_code = $this->curl_getinfo['http_code'];
     }
     
     if (($http_code != $this->http_code) || ($http_code != 200))
@@ -52,7 +52,7 @@ class Site extends BaseSite
     return $http_code;
   }
   
-  public function retrieveInfo($format)
+  public function retrieveUpInfo($format)
   {
   	$this->format = $format;
   	
@@ -64,16 +64,23 @@ class Site extends BaseSite
     return $this->message;
   }
   
-  public function retrieveAllInfo($format)
+  public function retrieveNetworkInfo($format) 
   {
   	$this->format = $format;
   	
-    $this->retrieveHttpCode();
+  	$this->retrieveIP();
+  	$this->retrieveHost();
+    
+    return $this->message;
+  }
+  
+  public function retrieveContentInfo($format)
+  {
+  	$this->format = $format;
+  	
     //$this->retrieveScreenshot();
     //$this->retrieveFavicon();
     $this->retrieveTitle();
-    $this->retrieveIP();
-    $this->retrieveHost();
       
       /* todo
        * - retrieve apple favicon
@@ -83,9 +90,6 @@ class Site extends BaseSite
        * - save meta description
        * - save meta keyword
        */  
-    
-	  $this->last_check = new Doctrine_Expression('NOW()');
-    $this->save();
     
     return $this->message;
   }
@@ -153,6 +157,8 @@ class Site extends BaseSite
   
   public function retrieveTitle()
   {
+    $this->curl_getinfo = $this->curlCall();
+    
     if ($this->page)
     {
 	    $this->curlCall();
@@ -161,20 +167,22 @@ class Site extends BaseSite
 	    foreach ($results as $result) {
 	      	$title = $result->nodeValue;
 	    }
+    
+	    if ($title != $this->title)
+	    {
+	    	if ($this->title != '')
+	    	{
+	    		$this->message .= sprintf($this->format, 'title', $this->title, $title);
+	    	}
+	    	
+	      $this->title = $title;
+	      $this->save();
+	    }
+	    
+	    return $title;
     }
     
-    if ($title != $this->title)
-    {
-    	if ($this->title != '')
-    	{
-    		$this->message .= sprintf($this->format, 'title', $this->title, $title);
-    	}
-    	
-      $this->title = $title;
-      $this->save();
-    }
-    
-    return $title;
+	  return false;
   }
    
   public function retrieveFavicon()

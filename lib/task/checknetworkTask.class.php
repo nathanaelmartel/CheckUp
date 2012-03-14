@@ -1,6 +1,6 @@
 <?php
 
-class checkupTask extends sfBaseTask
+class checknetworkTask extends sfBaseTask
 {
   protected function configure()
   {
@@ -17,13 +17,13 @@ class checkupTask extends sfBaseTask
     ));
 
     $this->namespace        = '';
-    $this->name             = 'checkup';
+    $this->name             = 'checknetwork';
     $this->briefDescription = '';
     $this->detailedDescription = <<<EOF
-The [checkup|INFO] task does things.
+The [checknetwork|INFO] task does things.
 Call it with:
 
-  [php symfony checkup|INFO]
+  [php symfony checknetwork|INFO]
 EOF;
   }
 
@@ -34,7 +34,7 @@ EOF;
     $connection = $databaseManager->getDatabase($options['connection'])->getConnection();
     
     $file_logger = new sfFileLogger($this->dispatcher, array(
-    	'file' => $this->configuration->getRootDir().'/log/checkup.log'
+    	'file' => $this->configuration->getRootDir().'/log/checknetwork.log'
     ));
     $this->dispatcher->connect('command.log', array($file_logger, 'listenToLogEvent'));
     
@@ -43,8 +43,8 @@ EOF;
     $sites = Doctrine_Core::getTable('Site')->createQuery('c')->orderBy('updated_at ASC')->limit(50)->execute();
     foreach ($sites as $site)
     {
-      $message_body = $site->retrieveUpInfo(sfConfig::get('app_alert_email_format_change'));
-      sfTask::log($site->getUrl().' ['.$site->http_code.']');
+      $message_body = $site->retrieveNetworkInfo(sfConfig::get('app_alert_email_format_change'));
+      sfTask::log($site->getUrl().' ['.$site->ip.'] '.$site->host);
       
       if ($message_body != '') {
 	      $message = $this->getMailer()->compose(
@@ -55,9 +55,8 @@ EOF;
 	      );
 	      $message->setContentType('text/html');
       	$this->getMailer()->send($message);
-      	sfTask::log('['.$site->getUrl().'] error: '.$message_body.' '.json_encode($site->curl_getinfo));
+      	sfTask::log('['.$site->getUrl().'] error: '.json_encode($message_body));
       }
     }
-    
   }
 }

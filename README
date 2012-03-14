@@ -25,5 +25,13 @@ mkdir log
 ./symfony doctrine:build --all
 
 crontab -e
-*       *       *       *       *       /path/symfony checkup --application="frontend"  >/dev/null 2>&1
+
+Check the HTTP code every minutes 
+*       *       *       *       *       /path/symfony checkup --application="frontend" > /dev/null
+Check network info every hours
+12       *       *       *       *       /path/symfony checknetwork --application="frontend" > /dev/null
+Check content info every hours
+42       *       *       *       *       /path/symfony checkcontent --application="frontend" > /dev/null
+Remove log montly
+0       0       2       *       *       /path/symfony log:clear > /dev/null
 
