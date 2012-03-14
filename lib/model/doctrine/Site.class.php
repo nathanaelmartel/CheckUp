@@ -164,6 +164,7 @@ class Site extends BaseSite
 	    $this->curlCall();
 	    $dom = new Zend_Dom_Query($this->page);
 	    $results = $dom->query('title');
+	    $title = '';
 	    foreach ($results as $result) {
 	      	$title = $result->nodeValue;
 	    }

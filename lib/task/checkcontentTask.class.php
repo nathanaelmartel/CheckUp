@@ -44,7 +44,7 @@ EOF;
     foreach ($sites as $site)
     {
       $message_body = $site->retrieveContentInfo(sfConfig::get('app_alert_email_format_change'));
-      sfTask::log($site->getUrl());
+      sfTask::log($site->getUrl().' ['.$site->title.']');
       
       if ($message_body != '') {
 	      $message = $this->getMailer()->compose(
