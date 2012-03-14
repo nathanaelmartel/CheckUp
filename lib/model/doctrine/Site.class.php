@@ -157,14 +157,14 @@ class Site extends BaseSite
   
   public function retrieveTitle()
   {
-    $this->curl_getinfo = $this->curlCall();
+    $this->curl_getinfo = $this->curlCall(true);
     
     if ($this->page)
     {
 	    $this->curlCall();
 	    $dom = new Zend_Dom_Query($this->page);
-	    $results = $dom->query('title');
 	    $title = '';
+	    $results = $dom->query('title');
 	    foreach ($results as $result) {
 	      	$title = $result->nodeValue;
 	    }
