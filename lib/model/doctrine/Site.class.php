@@ -12,7 +12,7 @@
  */
 class Site extends BaseSite
 {
-  private $curl_getinfo = '';
+  public $curl_getinfo = '';
   private $page = '';
   private $message = '';
   private $format = '';
@@ -47,6 +47,7 @@ class Site extends BaseSite
     		$this->retrieveHttpCode();
     	}
     }
+	    		
     
     return $http_code;
   }

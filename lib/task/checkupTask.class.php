@@ -33,13 +33,18 @@ EOF;
     $databaseManager = new sfDatabaseManager($this->configuration);
     $connection = $databaseManager->getDatabase($options['connection'])->getConnection();
     
+    $file_logger = new sfFileLogger($this->dispatcher, array(
+    	'file' => $this->configuration->getRootDir().'/log/checkup.log'
+    ));
+    $this->dispatcher->connect('command.log', array($file_logger, 'listenToLogEvent'));
+    
     require_once('lib/vendor/Zend/Dom/Query.php');
     
     $sites = Doctrine_Core::getTable('Site')->createQuery('c')->orderBy('updated_at ASC')->limit(100)->execute();
     foreach ($sites as $site)
     {
-      echo $site->getUrl()."\t\t\t";
       $message_body = $site->retrieveInfo(sfConfig::get('app_alert_email_format_change'));
+      sfTask::log($site->getUrl().' ['.$site->http_code.']');
       
       if ($message_body != '') {
 	      $message = $this->getMailer()->compose(
@@ -50,7 +55,10 @@ EOF;
 	      );
 	      $message->setContentType('text/html');
       	$this->getMailer()->send($message);
+      	sfTask::log(json_encode($site->curl_getinfo));
       }
+      
+      
       
       echo "\n";
     }
