@@ -40,7 +40,7 @@ EOF;
     
     require_once('lib/vendor/Zend/Dom/Query.php');
     
-    $sites = Doctrine_Core::getTable('Site')->createQuery('c')->orderBy('updated_at ASC')->limit(100)->execute();
+    $sites = Doctrine_Core::getTable('Site')->createQuery('c')->orderBy('updated_at ASC')->limit(30)->execute();
     foreach ($sites as $site)
     {
       $message_body = $site->retrieveInfo(sfConfig::get('app_alert_email_format_change'));
