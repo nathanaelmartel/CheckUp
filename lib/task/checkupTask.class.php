@@ -40,7 +40,7 @@ EOF;
     
     require_once('lib/vendor/Zend/Dom/Query.php');
     
-    $sites = Doctrine_Core::getTable('Site')->createQuery('c')->orderBy('updated_at ASC')->limit(50)->execute();
+    $sites = Doctrine_Core::getTable('Site')->createQuery('c')->orderBy('updated_at ASC')->limit(40)->execute();
     foreach ($sites as $site)
     {
       $message_body = $site->retrieveUpInfo(sfConfig::get('app_alert_email_format_change'));
@@ -58,6 +58,5 @@ EOF;
       	sfTask::log('['.$site->getUrl().'] error: '.strip_tags($message_body).' '.json_encode($site->curl_getinfo));
       }
     }
-    
   }
 }

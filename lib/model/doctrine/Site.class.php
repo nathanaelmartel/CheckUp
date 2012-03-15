@@ -31,23 +31,38 @@ class Site extends BaseSite
     	$http_code = $this->curl_getinfo['http_code'];
     }
     
-    if (($http_code != $this->http_code) || ($http_code != 200))
+    if ($http_code != 200)
     {
     	$this->failed++;
     	
     	if ($this->failed > 2) {
-	    	if ($this->http_code != '')
-	    	{
-	    		$this->message .= sprintf($this->format, 'http code', $this->http_code, $http_code);
-	    	}
-	      $this->http_code = $http_code;
-	      $this->save();
+    		if ($http_code != $this->http_code) {
+		    	if ($this->http_code != '')
+		    	{
+		    		$this->message .= sprintf($this->format, 'http code', $this->http_code, $http_code);
+		    	}
+		      $this->http_code = $http_code;
+		      $this->save();
+    		}
+    		
+    		$downtime = new Downtime;
+    		$downtime->site_id = $this->id;
+    		$downtime->http_code = $http_code;
+    		$downtime->time = new Doctrine_Expression('NOW()');
+    		$downtime->save();
+    		
     	} else {
+    		/* TODO: use API */
     		$this->curl_getinfo = '';
     		$this->retrieveHttpCode();
     	}
     }
-	    		
+
+		if ($this->http_code == '')
+		{
+      $this->http_code = $http_code;
+      $this->save();
+		}
     
     return $http_code;
   }

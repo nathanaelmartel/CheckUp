@@ -10,6 +10,12 @@ Site:
     effective_url: string(255)
     last_check: date
     
+  relations:
+    Downtimes:
+      class: Downtime
+      local: id
+      foreign: site_id
+    
   actAs:
     Timestampable:
     Sluggable: { fields: [url], uniqueBy: [id], canUpdate: false }
@@ -17,3 +23,23 @@ Site:
   options:
     collate: utf8_unicode_ci
     charset: utf8
+    
+Downtime:
+  tableName: downtime
+  columns:
+    http_code: string(255)
+    time: {type: datetime, primary: true}
+    site_id: {type: integer, primary: true}
+    
+  relations:
+    Site:
+      class: Site
+      local: site_id
+      foreign: id
+
+  options:
+    collate: utf8_unicode_ci
+    charset: utf8
+    
+    
+    
