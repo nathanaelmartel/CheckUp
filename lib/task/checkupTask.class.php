@@ -55,7 +55,7 @@ EOF;
 	      );
 	      $message->setContentType('text/html');
       	$this->getMailer()->send($message);
-      	sfTask::log('['.$site->getUrl().'] error: '.$message_body.' '.json_encode($site->curl_getinfo));
+      	sfTask::log('['.$site->getUrl().'] error: '.strip_tags($message_body).' '.json_encode($site->curl_getinfo));
       }
     }
     

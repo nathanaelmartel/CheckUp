@@ -34,7 +34,6 @@ class Site extends BaseSite
     if (($http_code != $this->http_code) || ($http_code != 200))
     {
     	$this->failed++;
-    	$this->curl_getinfo = '';
     	
     	if ($this->failed > 2) {
 	    	if ($this->http_code != '')
@@ -44,6 +43,7 @@ class Site extends BaseSite
 	      $this->http_code = $http_code;
 	      $this->save();
     	} else {
+    		$this->curl_getinfo = '';
     		$this->retrieveHttpCode();
     	}
     }
