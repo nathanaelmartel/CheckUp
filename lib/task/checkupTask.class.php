@@ -46,7 +46,7 @@ EOF;
       $message_body = $site->retrieveUpInfo(sfConfig::get('app_alert_email_format_change'));
       sfTask::log($site->getUrl().' ['.$site->http_code.']');
       
-      if ($message_body != '') {
+      if (($message_body != '') && (!in_array(date('G'), sfConfig::get('app_alert_no_email_hours')))) {
 	      $message = $this->getMailer()->compose(
 	      	sfConfig::get('app_alert_email_from'), 
 	      	sfConfig::get('app_alert_email_to'), 

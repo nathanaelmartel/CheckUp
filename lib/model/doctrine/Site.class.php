@@ -41,8 +41,6 @@ class Site extends BaseSite
 		    	{
 		    		$this->message .= sprintf($this->format, 'http code', $this->http_code, $http_code);
 		    	}
-		      $this->http_code = $http_code;
-		      $this->save();
     		}
     		
     		$downtime = new Downtime;
@@ -57,12 +55,12 @@ class Site extends BaseSite
     		$this->retrieveHttpCode();
     	}
     }
-
-		if ($this->http_code == '')
-		{
-      $this->http_code = $http_code;
-      $this->save();
-		}
+    
+    if (($http_code != $this->http_code) || ($this->http_code == '')) 
+    {
+		   $this->http_code = $http_code;
+		   $this->save();
+    }
     
     return $http_code;
   }

@@ -1,14 +1,14 @@
 
 Site:
   200:
-    url: http://http-200.error.fam-martel.eu/
+    url: http-200.error.fam-martel.eu
   404:
-    url: http://http-404.error.fam-martel.eu/
+    url: http-404.error.fam-martel.eu
   418:
-    url: http://http-418.error.fam-martel.eu/
+    url: http-418.error.fam-martel.eu
   500:
-    url: http://http-500.error.fam-martel.eu/
+    url: http-500.error.fam-martel.eu
   301:
-    url: http://http-301.error.fam-martel.eu/
+    url: http-301.error.fam-martel.eu
   302:
-    url: http://http-302.error.fam-martel.eu/
+    url: http-302.error.fam-martel.eu
