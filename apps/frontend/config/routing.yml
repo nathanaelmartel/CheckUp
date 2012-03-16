@@ -1,10 +1,13 @@
-# You can find more information about this file on the symfony website:
-# http://www.symfony-project.org/reference/1_4/en/10-Routing
+
 
 # default rules
+site:
+  url:   /site
+  param: { module: site, action: index }
+  
 homepage:
   url:   /
-  param: { module: default, action: index }
+  param: { module: site, action: index }
 
 # generic rules
 # please, remove them by adding more specific rules

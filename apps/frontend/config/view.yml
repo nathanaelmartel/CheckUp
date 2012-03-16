@@ -6,13 +6,14 @@ default:
     content-type: text/html
 
   metas:
-    #title:        symfony project
+    title:        CheckUp
     #description:  symfony project
     #keywords:     symfony, project
-    #language:     en
-    #robots:       index, follow
+    language:     en
+    robots:       noindex, nofollow
 
-  stylesheets:    [main.css]
+  stylesheets:
+    - /css/main.css
 
   javascripts:    []
 

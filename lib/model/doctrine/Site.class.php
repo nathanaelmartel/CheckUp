@@ -297,4 +297,21 @@ class Site extends BaseSite
 	  
 	  return $screenshot_dir.date('Y-m').'.jpg';
   }
+  
+  public function getHttpCodeName() {
+  	
+  	$code_names = sfConfig::get('app_http');
+  	
+  	return $code_names[$this->http_code];
+  }
+  
+  public function getHttpCodeStyle() {
+  	if ($this->http_code == 200)
+  		return 'ok';
+  	
+  	if (in_array($this->http_code, array(404, 500, 401)))
+  		return 'error';
+  	
+  	return 'warning';
+  }
 }
